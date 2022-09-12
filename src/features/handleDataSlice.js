@@ -1,10 +1,8 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import { db } from "../firebase/config";
-import { useDispatch } from 'react-redux';
 import {
   collection,
-  onSnapshot,
-  addDoc
+  addDoc,
 } from "firebase/firestore";
 
 const initialState = {
@@ -14,6 +12,12 @@ const initialState = {
     isPending : false,
     error : null,
     success : null,
+
+
+    projectDocuments : [],
+    projectError : null,
+    projectIsPending : null,
+
 
 }
 
@@ -31,6 +35,8 @@ export const addDocument = createAsyncThunk("handleData/addDocument",async (payl
 })
 
 
+
+
 export const handleDataSlice = createSlice({
     name : 'handleData',
     initialState,
@@ -42,6 +48,11 @@ export const handleDataSlice = createSlice({
 
         setSuccess : (state) => {
             state.success = false;
+        },
+
+
+        fetchProjects : (state,action) => {
+            state.projectDocuments = action.payload;
         }
 
    
@@ -66,7 +77,7 @@ export const handleDataSlice = createSlice({
 });
 
 
-export const {getCollection,setSuccess} = handleDataSlice.actions;
+export const {getCollection,setSuccess,fetchProjects} = handleDataSlice.actions;
 export default handleDataSlice.reducer;
 
 // addDocument : (state,{payload}) => {

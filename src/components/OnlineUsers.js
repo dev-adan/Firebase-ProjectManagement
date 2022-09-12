@@ -10,15 +10,19 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-const OnlineUsers = () => {
+const OnlineUsers =  () => {
   const getdataslicer = useSelector((state) => state.handleData);
   const dispatch = useDispatch();
 
+
+
   const [error, setError] = React.useState("");
+
+  
   useEffect(() => {
     const ref = collection(db, "users");
 
-    const unsub = onSnapshot(
+    const unsub =  onSnapshot(
       ref,
       (usersSnapShot) => {
         let results = [];
