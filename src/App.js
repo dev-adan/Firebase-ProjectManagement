@@ -24,6 +24,7 @@ function App() {
   }, []);
 
   const authslicer = useSelector((state) => state.auth);
+  
   return (
     <div className="App">
       {authslicer.authIsReady && (

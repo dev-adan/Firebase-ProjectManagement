@@ -1,6 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit';
 import authReducer from './features/authSlicer';
-import getDataReducer from './features/getDataSlice'
+import handleDataReducer from './features/handleDataSlice'
 
 
 
@@ -8,7 +8,7 @@ export const store = configureStore({
 
     reducer : {
         auth : authReducer,
-        getData : getDataReducer,
+        handleData : handleDataReducer,
     },
 
 
