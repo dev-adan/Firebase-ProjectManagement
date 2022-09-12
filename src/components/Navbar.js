@@ -17,12 +17,12 @@ const Navbar = () => {
                 <img src={Temple} alt='dojo logo'/>
                 <span>The Dojo</span>
             </li>
-            <li><Link to='/login'>Login</Link></li>
-            <li><Link to='/signup'>Signup</Link></li>
-            <li>
+            {!authslicer.user && <li><Link to='/login'>Login</Link></li>}
+            {!authslicer.user &&  <li><Link to='/signup'>Signup</Link></li>}
+            {authslicer.user &&  <li>
             {!authSlicer.isPending && <button className='btn' onClick={() => dispatch(LogoutUser())}>Logout</button> }
             {authSlicer.isPending && <button className='btn' disabled >Logging out...</button> }
-            </li>
+            </li>}
         </ul>
     </div>
   )

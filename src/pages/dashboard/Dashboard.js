@@ -1,8 +1,12 @@
-import React from 'react'
-import './Dashboard.css'
+import React,{useEffect} from 'react';
+import './Dashboard.css';
+
+
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div>
+      <h1>Dashboard</h1>
+    </div>
   )
 }
 

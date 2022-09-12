@@ -5,6 +5,9 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { setDoc, doc} from "firebase/firestore";
 import { signOut,signInWithEmailAndPassword } from "firebase/auth";
 
+
+
+
 const initialState = {
   user: null,
   authIsReady: false,
@@ -55,10 +58,13 @@ export const SignupUser = createAsyncThunk(
 export const LogoutUser = createAsyncThunk(
   "auth/LogoutUser",
   async (arg, thunkAPI) => {
+
     const state = thunkAPI.getState();
     try {
       await setDoc(doc(db, "users", state.auth.user.uid), { online: false },{ merge:true });
       await signOut(auth);
+      window.location.reload();
+      
     } catch (error) {
       console.log(error);
     }
@@ -90,7 +96,17 @@ export const authSlice = createSlice({
   reducers: {
     ErrorHandler : (state) => {
       state.error = '';
+    },
+
+    AuthStateChange : (state,action) => {
+
+      state.authIsReady = true;
+      if(action.payload){
+        state.user = action.payload;
+      }
+
     }
+
   },
 
   extraReducers: {
@@ -146,6 +162,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { ErrorHandler } = authSlice.actions;
+export const { ErrorHandler,AuthStateChange  } = authSlice.actions;
 export default authSlice.reducer;
 
