@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "../firebase/config";
-import { collection, addDoc, setDoc, doc,deleteDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, deleteDoc } from "firebase/firestore";
 
 const initialState = {
   documents: null,
@@ -9,12 +9,15 @@ const initialState = {
   success: null,
 
   projectDocuments: [],
+
+  filteredProjectDocuments: [],
+
+  filter: "all",
 };
 
 export const updateDocument = createAsyncThunk(
   "handleData/updateDocument",
   async (data) => {
-   
     try {
       const ref = doc(db, data.name, data.id);
       await setDoc(
@@ -30,27 +33,62 @@ export const updateDocument = createAsyncThunk(
   }
 );
 
-export const deleteDocument = createAsyncThunk("handleData/deleteDocument", async (data) => {
-    
-    try{
-
-        await deleteDoc(doc(db,data.name,data.id));
-       
-
-    }catch(error){
-        console.log(error)
+export const deleteDocument = createAsyncThunk(
+  "handleData/deleteDocument",
+  async (data) => {
+    try {
+      await deleteDoc(doc(db, data.name, data.id));
+    } catch (error) {
+      console.log(error);
     }
-})
+  }
+);
 
 export const addDocument = createAsyncThunk(
   "handleData/addDocument",
-  async (payload, { getState }) => {
+  async (payload) => {
     try {
       const ref = collection(db, payload.name);
       await addDoc(ref, payload.data);
     } catch (error) {
       console.log(error);
     }
+  }
+);
+
+export const changeFilter = createAsyncThunk(
+  "handleData/changeFilter",
+  async (filter, { getState }) => {
+    const state = getState();
+
+    const filteredProject = state.handleData.projectDocuments.filter(
+      (document) => {
+        switch (filter) {
+          case "all":
+            return true;
+
+          case "mine":
+            let assignedToMe = false;
+            document.assignedUsersList.forEach((u) => {
+              if (u.id === state.auth.user.uid) {
+                assignedToMe = true;
+              }
+            });
+            return assignedToMe;
+
+          case "design":
+          case "development":
+          case "sales":
+          case "marketing":
+            return document.category === filter;
+
+          default:
+            return true;
+        }
+      }
+    );
+
+    return { filteredProject, filter };
   }
 );
 
@@ -96,19 +134,28 @@ export const handleDataSlice = createSlice({
     },
 
     [deleteDocument.pending]: (state) => {
-        console.log("deleting document pending");
-      },
-      [deleteDocument.fulfilled]: (state) => {
-    
-        console.log("deleting document fulfilled");
-      },
-      [deleteDocument.rejected]: (state) => {
-        console.log("deleting document rejected");
-      },
+      console.log("deleting document pending");
+    },
+    [deleteDocument.fulfilled]: (state) => {
+      console.log("deleting document fulfilled");
+    },
+    [deleteDocument.rejected]: (state) => {
+      console.log("deleting document rejected");
+    },
+
+    [changeFilter.pending]: (state) => {
+      console.log("change filter pending");
+    },
+    [changeFilter.fulfilled]: (state, action) => {
+      state.filteredProjectDocuments = action.payload.filteredProject;
+      state.filter = action.payload.filter;
+    },
+    [changeFilter.rejected]: (state) => {
+      console.log("deleting document rejected");
+    },
   },
 });
 
 export const { getCollection, setSuccess, fetchProjects } =
   handleDataSlice.actions;
 export default handleDataSlice.reducer;
-
