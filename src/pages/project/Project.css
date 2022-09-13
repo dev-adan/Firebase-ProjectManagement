@@ -76,4 +76,6 @@
   .comment-content {
     color: var(--text-color);
     font-size: 0.9em;
+    color: black;
+    font-weight: bold;
   }

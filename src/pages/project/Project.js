@@ -52,8 +52,8 @@ const Project = () => {
 
   return (
     <div className='project-details'>
-      <ProjectSummary project={document}/>
-      <ProjectComments/>
+      <ProjectSummary project={document} id={id}/>
+      <ProjectComments id={id} project={document}/>
 
     </div>
   )
