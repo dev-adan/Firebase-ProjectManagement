@@ -15,9 +15,7 @@ const initialState = {
 
 
     projectDocuments : [],
-    projectError : null,
-    projectIsPending : null,
-
+    
 
 }
 
